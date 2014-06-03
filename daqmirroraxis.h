@@ -16,8 +16,9 @@ public:
     std::string chan_string;
     TaskHandle taskHandle;
     const char * chan_char;
-
+    DaqMirrorAxis();
     DaqMirrorAxis(std::string thisChan);
+    void set_chan(std::string thisChan);
     void set(double val);
 };
 

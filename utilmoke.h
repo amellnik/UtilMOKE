@@ -1,6 +1,7 @@
 #ifndef UTILMOKE_H
 #define UTILMOKE_H
 
+#include "daqmirroraxis.h"
 #include <QWidget>
 
 namespace Ui {
@@ -15,8 +16,13 @@ public:
     explicit UtilMOKE(QWidget *parent = 0);
     ~UtilMOKE();
 
+private slots:
+    void on_mirrorGotoSetpoints_clicked();
+
 private:
     Ui::UtilMOKE *ui;
+    DaqMirrorAxis mirrorX;
+    DaqMirrorAxis mirrorY;
 };
 
 #endif // UTILMOKE_H
