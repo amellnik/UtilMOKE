@@ -1,14 +1,16 @@
 #include "utilmoke.h"
 #include "ui_utilmoke.h"
-#include "daqmirroraxis.h"
+//#include "daqmirroraxis.h"
+#include "daqmagcontrol.h"
+#include "pximirroraxes.h"
 
 UtilMOKE::UtilMOKE(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::UtilMOKE)
 {
     ui->setupUi(this);
-    mirrorX.set_chan("Dev1/ao0");
-    mirrorY.set_chan("Dev1/ao1");
+    mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
+    bigMag.set_chan("Dev1/ao0");
 }
 
 UtilMOKE::~UtilMOKE()
@@ -18,6 +20,16 @@ UtilMOKE::~UtilMOKE()
 
 void UtilMOKE::on_mirrorGotoSetpoints_clicked()
 {
-    mirrorX.set(ui->mirrorXSetBox->value());
-    mirrorY.set(ui->mirrorYSetBox->value());
+    mirror.set_dc(ui->mirrorXSetBox->value(), ui->mirrorYSetBox->value());
+
+}
+
+void UtilMOKE::on_magGotoSetpoint_clicked()
+{
+    bigMag.ramp(ui->magSetBox->value());
+}
+
+void UtilMOKE::on_magVoltsSetBox_editingFinished()
+{
+    bigMag.set_volts(ui->magVoltsSetBox->value());
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>871</width>
-    <height>682</height>
+    <width>736</width>
+    <height>584</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>520</y>
+     <x>50</x>
+     <y>340</y>
      <width>281</width>
      <height>151</height>
     </rect>
@@ -154,10 +154,10 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>520</y>
+     <x>340</x>
+     <y>340</y>
      <width>176</width>
-     <height>158</height>
+     <height>186</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -177,7 +177,7 @@
        <widget class="QDoubleSpinBox" name="magSetBox"/>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="magGotoSetpoint">
         <property name="text">
          <string>Goto Magnet Setpoint</string>
         </property>
@@ -248,6 +248,30 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <item>
+       <widget class="QDoubleSpinBox" name="magVoltsSetBox">
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Manual mag volts</string>
         </property>
        </widget>
       </item>

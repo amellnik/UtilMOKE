@@ -14,12 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         utilmoke.cpp \
-    daqmirroraxis.cpp
+    daqmagcontrol.cpp \
+    pximirroraxes.cpp
 
 HEADERS  += \
-    daqmirroraxis.h \
     utilmoke.h \
-    NIDAQmx.h
+    NIDAQmx.h \
+    daqmagcontrol.h \
+    pximirroraxes.h
 
 
 
