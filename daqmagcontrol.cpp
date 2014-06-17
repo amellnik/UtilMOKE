@@ -2,7 +2,13 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <math.h>
+#include <windows.h>
 #include "NIDAQmx.h"
+
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 
 DaqMagControl::DaqMagControl()\
 {
@@ -23,9 +29,19 @@ void DaqMagControl::set_chan(std::string thisChan)
 
 void DaqMagControl::ramp(double this_set)
 {
+    double thisvolts;
     set = this_set;
-    //Do something here
-
+    while (fabs(set-now)>delta)
+    {
+        now+=delta*sgn(set-now);
+        thisvolts=0.026142-35.013*now+1.9131*pow(now,2)+4.6271*pow(now,3)-18.01*pow(now,4);
+        set_volts(thisvolts);
+        Sleep(delay);
+    }
+    Sleep(delay);
+    now=set;
+    thisvolts=0.026142-35.013*now+1.9131*pow(now,2)+4.6271*pow(now,3)-18.01*pow(now,4);
+    set_volts(thisvolts);
 }
 
 void DaqMagControl::set_volts(double this_volts)

@@ -1,5 +1,4 @@
 #include "utilmoke.h"
-#include "daqmirroraxis.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

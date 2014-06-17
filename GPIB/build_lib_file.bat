@@ -1,0 +1,1 @@
+dlltool -k -D gpib-32.dll -d gpib.def -l libgpib.a

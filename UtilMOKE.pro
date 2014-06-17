@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = UtilMOKE
 TEMPLATE = app
@@ -15,19 +15,29 @@ TEMPLATE = app
 SOURCES += main.cpp\
         utilmoke.cpp \
     daqmagcontrol.cpp \
-    pximirroraxes.cpp
+    pximirroraxes.cpp \
+    qcustomplot.cpp \
+    lockin7265.cpp
 
 HEADERS  += \
     utilmoke.h \
     NIDAQmx.h \
     daqmagcontrol.h \
-    pximirroraxes.h
+    pximirroraxes.h \
+    qcustomplot.h \
+    lockin7265.h \
+    gpib.h \
+    ni488.h
 
 
 
 FORMS    += utilmoke.ui
 
 win32: LIBS += -L$$PWD/ -lNIDAQmx
+LIBS += $$PWD/libgpib.a
 
 INCLUDEPATH += $$PWD/
 DEPENDPATH += $$PWD/
+
+
+

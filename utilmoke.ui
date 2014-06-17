@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>340</y>
+     <y>420</y>
      <width>281</width>
      <height>151</height>
     </rect>
@@ -98,6 +98,9 @@
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
+        <property name="value">
+         <double>-10.000000000000000</double>
+        </property>
        </widget>
       </item>
       <item>
@@ -118,6 +121,9 @@
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
+        <property name="value">
+         <double>-10.000000000000000</double>
+        </property>
        </widget>
       </item>
      </layout>
@@ -130,6 +136,9 @@
          <double>-10.000000000000000</double>
         </property>
         <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="value">
          <double>10.000000000000000</double>
         </property>
        </widget>
@@ -145,7 +154,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="mirrorYEndBox"/>
+       <widget class="QDoubleSpinBox" name="mirrorYEndBox">
+        <property name="value">
+         <double>10.000000000000000</double>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -155,9 +168,9 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>340</y>
-     <width>176</width>
-     <height>186</height>
+     <y>360</y>
+     <width>180</width>
+     <height>215</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -174,7 +187,20 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_9">
       <item>
-       <widget class="QDoubleSpinBox" name="magSetBox"/>
+       <widget class="QDoubleSpinBox" name="magSetBox">
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>-0.290000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.290000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="magGotoSetpoint">
@@ -186,9 +212,29 @@
      </layout>
     </item>
     <item>
+     <widget class="QPushButton" name="magSweep">
+      <property name="text">
+       <string>Sweep Magnet</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
-       <widget class="QDoubleSpinBox" name="magStartBox"/>
+       <widget class="QDoubleSpinBox" name="magStartBox">
+        <property name="minimum">
+         <double>-0.290000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.290000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>-0.290000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_7">
@@ -205,7 +251,20 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="QDoubleSpinBox" name="magEndBox"/>
+       <widget class="QDoubleSpinBox" name="magEndBox">
+        <property name="minimum">
+         <double>-0.290000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.290000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.020000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.290000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_8">
@@ -222,7 +281,23 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <widget class="QDoubleSpinBox" name="magDeltaBox"/>
+       <widget class="QDoubleSpinBox" name="magDeltaBox">
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>0.000010000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.000100000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000100000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_9">
@@ -239,12 +314,19 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <widget class="QDoubleSpinBox" name="magDelayBox"/>
+       <widget class="QSpinBox" name="magDelayBox">
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_10">
         <property name="text">
-         <string>Delay</string>
+         <string>Delay (ms)</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -270,6 +352,70 @@
       </item>
       <item>
        <widget class="QLabel" name="label_11">
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>85</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>85</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>85</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>85</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>120</red>
+              <green>120</green>
+              <blue>120</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>120</red>
+              <green>120</green>
+              <blue>120</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
         <property name="text">
          <string>Manual mag volts</string>
         </property>
@@ -279,8 +425,26 @@
     </item>
    </layout>
   </widget>
+  <widget class="QCustomPlot" name="bigGraph" native="true">
+   <property name="geometry">
+    <rect>
+     <x>109</x>
+     <y>30</y>
+     <width>371</width>
+     <height>321</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
