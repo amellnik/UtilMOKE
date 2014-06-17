@@ -6,7 +6,8 @@ class Lockin7265
 public:
     int address;
     int handle;
-    Lockin7265(int ady);
+    Lockin7265();
+    void set_address(int ady);
     double get_x();
 
 };

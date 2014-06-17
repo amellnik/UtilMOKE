@@ -4,6 +4,8 @@
 //#include "daqmirroraxis.h"
 #include "daqmagcontrol.h"
 #include "pximirroraxes.h"
+#include "lockin7265.h"
+#include "mokedata.h"
 #include <QWidget>
 
 namespace Ui {
@@ -17,6 +19,7 @@ class UtilMOKE : public QWidget
 public:
     explicit UtilMOKE(QWidget *parent = 0);
     ~UtilMOKE();
+    void TakeSingle();
 
 private slots:
     void settingWidgetChanged();
@@ -30,6 +33,8 @@ private:
     Ui::UtilMOKE *ui;
     PxiMirrorAxes mirror;
     DaqMagControl bigMag;
+    Lockin7265 lockin;
+    MOKEData data;
 };
 
 #endif // UTILMOKE_H

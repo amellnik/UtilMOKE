@@ -4,8 +4,12 @@
 
 
 
-Lockin7265::Lockin7265(int ady)
+Lockin7265::Lockin7265()
 {
+
+}
+
+void Lockin7265::set_address(int ady) {
     address = ady;
     handle = ibdev(0, address, NO_SAD, T10s, 1, 0);
 }

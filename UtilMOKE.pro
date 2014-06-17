@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     daqmagcontrol.cpp \
     pximirroraxes.cpp \
     qcustomplot.cpp \
-    lockin7265.cpp
+    lockin7265.cpp \
+    mokedata.cpp
 
 HEADERS  += \
     utilmoke.h \
@@ -27,7 +28,8 @@ HEADERS  += \
     qcustomplot.h \
     lockin7265.h \
     gpib.h \
-    ni488.h
+    ni488.h \
+    mokedata.h
 
 
 
