@@ -31,13 +31,8 @@ private slots:
     void on_mirrorGotoSetpoints_clicked();
     void on_magGotoSetpoint_clicked();
     void on_magVoltsSetBox_editingFinished();
-
     void on_magSweep_clicked();
-
     void on_takeImage_clicked();
-
-//    void on_interruptBox_stateChanged(int arg1);
-
     void on_interruptBox_clicked();
 
 private:

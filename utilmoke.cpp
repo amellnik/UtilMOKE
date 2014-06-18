@@ -14,6 +14,8 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     ui(new Ui::UtilMOKE)
 {
     ui->setupUi(this);
+    ui->graphModeBox->addItem("Mag sweep");
+    ui->graphModeBox->addItem("Scan image");
     mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
     lockin.set_address(27);
     bigMag.set_chan("Dev2/ao0");
@@ -160,7 +162,4 @@ void UtilMOKE::on_interruptBox_clicked()
     interrupt=ui->interruptBox->isChecked();
 }
 
-//void UtilMOKE::on_interruptBox_stateChanged(int arg1)
-//{
-//    //This is here because I made it at some point and don't know how to nuke it
-//}
+
