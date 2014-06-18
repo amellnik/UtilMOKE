@@ -14,6 +14,9 @@ PxiMirrorAxes::PxiMirrorAxes()
     start_y=0.0;
     end_x=0.0;
     end_y=0.0;
+    delay=0;
+    delta_x=0.0;
+    delta_y=0.0;
     sampling_rate = 32000.0; //Kinda arbitrary
     buffer_size = sizeof(buffer)/sizeof(buffer[0]);
 }

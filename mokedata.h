@@ -8,6 +8,8 @@ public:
 
     QVector<double> volts;
     QVector<double> tesla;
+    QVector<double> mirrorX;
+    QVector<double> mirrorY;
     int collected;
 
     void clear_data();

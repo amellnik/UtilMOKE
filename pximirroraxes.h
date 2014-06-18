@@ -15,6 +15,9 @@ public:
     double start_y;
     double end_x;
     double end_y;
+    double delta_x;
+    double delta_y;
+    int delay;
     double sampling_rate;
     int buffer_size;
     double buffer [1024]; // Kinda arbitrary
