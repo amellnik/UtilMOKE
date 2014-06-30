@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>736</width>
-    <height>584</height>
+    <width>1039</width>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>380</y>
+     <x>710</x>
+     <y>390</y>
      <width>281</width>
      <height>182</height>
     </rect>
@@ -238,8 +238,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>350</y>
+     <x>710</x>
+     <y>160</y>
      <width>189</width>
      <height>215</height>
     </rect>
@@ -499,18 +499,18 @@
   <widget class="QCustomPlot" name="bigGraph" native="true">
    <property name="geometry">
     <rect>
-     <x>9</x>
+     <x>60</x>
      <y>10</y>
-     <width>711</width>
-     <height>331</height>
+     <width>640</width>
+     <height>640</height>
     </rect>
    </property>
   </widget>
   <widget class="QCheckBox" name="interruptBox">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>390</y>
+     <x>910</x>
+     <y>300</y>
      <width>121</width>
      <height>17</height>
     </rect>
@@ -527,8 +527,8 @@
   <widget class="QComboBox" name="graphModeBox">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>420</y>
+     <x>910</x>
+     <y>330</y>
      <width>121</width>
      <height>22</height>
     </rect>

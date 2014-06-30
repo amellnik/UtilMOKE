@@ -86,23 +86,24 @@ void UtilMOKE::on_takeImage_clicked()
 {
     double mX=mirror.start_x;
     double mY=mirror.start_y;
-
-    for (mY=mirror.start_y;(fabs(mirror.end_y-mY)>mirror.delta_y)&&(interrupt==0);mY+=mirror.delta_y*sgn(mirror.end_y-mirror.start_y))
+    mirror.prep_sweep();
+    for (mY=mirror.start_y;(fabs(mirror.end_y-mY)>=mirror.delta_y)&&(interrupt==0);mY+=mirror.delta_y*sgn(mirror.end_y-mirror.start_y))
     {
         Sleep(mirror.delay*10); //Long initial delay to reset
-        for (mX=mirror.start_x;(fabs(mX-mirror.end_x)>mirror.delta_x)&&(interrupt==0);mX+=mirror.delta_x*sgn(mirror.end_x-mirror.start_x))
+        for (mX=mirror.start_x;(fabs(mX-mirror.end_x)>=mirror.delta_x)&&(interrupt==0);mX+=mirror.delta_x*sgn(mirror.end_x-mirror.start_x))
         {
 
-            mirror.set_dc(mX,mY);
+            mirror.sweep_set(mX,mY);
             Sleep(mirror.delay);
             TakeSingle();
             QCoreApplication::processEvents();
         }
-        mirror.set_dc(mirror.end_x,mY);
+        mirror.sweep_set(mirror.end_x,mY);
         TakeSingle();
     }
-    mirror.set_dc(mirror.end_x,mirror.end_y);
+    mirror.sweep_set(mirror.end_x,mirror.end_y);
     TakeSingle();
+    mirror.set_dc(0.0,0.0);
 }
 
 void UtilMOKE::on_magSweep_clicked()

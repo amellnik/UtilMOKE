@@ -20,7 +20,7 @@ public:
     int delay;
     double sampling_rate;
     int buffer_size;
-    double buffer [1024]; // Kinda arbitrary
+    double buffer [16]; // Kinda arbitrary
     std::string chan_string_x;
     std::string chan_string_y;
     TaskHandle taskHandle;
@@ -30,6 +30,8 @@ public:
     PxiMirrorAxes();
     void set_chans(std::string chanX, std::string chanY);
     void set_dc(double valX, double valY);
+    void prep_sweep();
+    void sweep_set(double valX, double valY);
 };
 
 #endif // PXIMIRRORAXES_H
