@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     pximirroraxes.cpp \
     qcustomplot.cpp \
     lockin7265.cpp \
-    mokedata.cpp
+    mokedata.cpp \
+    keithley2k.cpp
 
 HEADERS  += \
     utilmoke.h \
@@ -29,7 +30,8 @@ HEADERS  += \
     lockin7265.h \
     gpib.h \
     ni488.h \
-    mokedata.h
+    mokedata.h \
+    keithley2k.h
 
 
 

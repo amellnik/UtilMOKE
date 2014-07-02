@@ -6,15 +6,15 @@ class MOKEData
 {
 public:
 
-    QVector<double> volts;
+    QVector<double> lockin_volts;
+    QVector<double> lockin_2f_volts;
+    QVector<double> dc_volts;
     QVector<double> tesla;
     QVector<double> mirrorX;
     QVector<double> mirrorY;
     int collected;
 
     void clear_data();
-    double max_volts();
-    double min_volts();
     MOKEData();
 
 };

@@ -15,12 +15,26 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     ui(new Ui::UtilMOKE)
 {
     ui->setupUi(this);
-    ui->graphModeBox->addItem("Mag sweep"); // Index 0?
-    ui->graphModeBox->addItem("Scan image"); // Index 1?
+
+    //Add values to combo boxes
+    ui->graphModeBox->addItem("Mag sweep"); // Index 0
+    ui->graphModeBox->addItem("Scan image"); // Index 1
+    ui->whatToPlotBox->addItem("Lockin Volts");// Index 0
+    ui->whatToPlotBox->addItem("Lockin 2f Volts");// Index 1
+    ui->whatToPlotBox->addItem("DC Volts"); // Index 2
+    ui->whatToPlotBox->addItem("Lockin Volts / DC");// Index 3
+    ui->whatToPlotBox->addItem("Lockin 2f Volts / DC");// Index 4
+
+    //Device channels and addresses
     mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
-    lockin.set_address(27);
     bigMag.set_chan("Dev2/ao0");
+    lockin.set_address(27);
+    keithley.set_address(26);
+
+    out_filename="";
+
     bigMag.ramp(ui->magSetBox->value());
+
     //Connect a bunch of signals to slots
     {
     connect(ui->mirrorXStartBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
@@ -65,6 +79,8 @@ void UtilMOKE::settingWidgetChanged()
     bigMag.delta=ui->magDeltaBox->value();
     bigMag.delay=ui->magDelayBox->value();
 
+    //Call this in case the mirror settings were changed and we need to adjust the image plot
+    on_graphModeBox_currentIndexChanged(-1);
 }
 
 void UtilMOKE::on_mirrorGotoSetpoints_clicked()
@@ -84,9 +100,17 @@ void UtilMOKE::on_magVoltsSetBox_editingFinished()
 
 void UtilMOKE::on_takeImage_clicked()
 {
+    //ClearData(); // Clear existing data if any
+    data.clear_data();
+
     double mX=mirror.start_x;
     double mY=mirror.start_y;
     mirror.prep_sweep();
+
+//    mirror.sweep_set(mX,mY);  // These three lines are a crappy bug fix that prevents the image plot from
+//    TakeSingle();             // showing up unless you switch into the normal plotting mode and then back
+//    on_graphModeBox_currentIndexChanged(1);
+
     for (mY=mirror.start_y;(fabs(mirror.end_y-mY)>=mirror.delta_y)&&(interrupt==0);mY+=mirror.delta_y*sgn(mirror.end_y-mirror.start_y))
     {
         Sleep(mirror.delay*10); //Long initial delay to reset
@@ -108,6 +132,9 @@ void UtilMOKE::on_takeImage_clicked()
 
 void UtilMOKE::on_magSweep_clicked()
 {
+   // ClearData(); //Clear existing data if any
+    data.clear_data();
+
     double field=bigMag.start;
     if (interrupt==0)
     {
@@ -148,7 +175,9 @@ void UtilMOKE::on_magSweep_clicked()
 void UtilMOKE::TakeSingle()
 {
     data.tesla.append(bigMag.now);
-    data.volts.append(lockin.get_x());
+    data.lockin_volts.append(lockin.get_x());
+    data.lockin_2f_volts.append(0.0); //Not currently used
+    data.dc_volts.append(keithley.read());
     data.mirrorX.append(mirror.now_x);
     data.mirrorY.append(mirror.now_y);
     data.collected+=1;
@@ -162,25 +191,42 @@ void UtilMOKE::UpdateGraph()
     //    ui->bigGraph->xAxis->setRange(bigMag.start,bigMag.end);
     //    ui->bigGraph->yAxis->setRange(data.min_volts(),data.max_volts());
     //
+    int whatToPlot=ui->whatToPlotBox->currentIndex();
+    QVector<double> plottable;
+    int i;
+    switch (whatToPlot)
+    {
+    case 0: plottable=data.lockin_volts;  break; //Normal lockin volts
+    case 1: break;//not yet implemented  // 2f Lockin volts
+    case 2: plottable=data.dc_volts; break; // DC volts
+    case 3: {                                   // 1f / DC
+        for (i=0;i<data.collected;i++){
+            plottable.append(data.lockin_volts[i]/data.dc_volts[i]);
+        }
+    } break;
+    case 4: {                                  //2f / DC
+        for (i=0;i<data.collected;i++){
+            //Not yet implemented
+        }
+    } break;
+    }
+
     int index=ui->graphModeBox->currentIndex();
     switch (index)
     {
-    case 0: {
-        twoDTrace->setData(data.tesla,data.volts);
+    case 0: { //Mag sweep mode
+        twoDTrace->setData(data.tesla,plottable);
+        ui->bigGraph->yAxis->rescale();
         ui->bigGraph->xAxis->setRange(bigMag.start,bigMag.end);
-        ui->bigGraph->yAxis->setRange(data.min_volts(),data.max_volts());
         ui->bigGraph->replot();
     } break;
-    case 1: {
-        int i;
+    case 1: {//Image mode
+
         for (i=0;i<data.collected;i++){
-            imageMap->data()->setData(data.mirrorX[i],data.mirrorY[i],data.volts[i]);
+            imageMap->data()->setData(data.mirrorX[i],data.mirrorY[i],plottable[i]);
         }
-        imageMap->setGradient(QCPColorGradient::gpCold);
-        imageMap->rescaleDataRange(true);
-        ui->bigGraph->xAxis->setRange(mirror.start_x,mirror.end_x);
-        ui->bigGraph->yAxis->setRange(mirror.start_y,mirror.end_y);
         ui->bigGraph->rescaleAxes();
+        imageMap->rescaleDataRange();
         ui->bigGraph->replot();
     }
     }
@@ -191,11 +237,24 @@ void UtilMOKE::on_interruptBox_clicked()
     interrupt=ui->interruptBox->isChecked();
 }
 
+void UtilMOKE::ClearData(){ // Not currently used
+    data.clear_data();
+   switch (ui->graphModeBox->currentIndex())
+   { // It's possible the later cases may not be initialized yet, clearing them would give a seg fault
+   case 0: {
+       twoDTrace->data()->clear();
 
+   } break;
+   case 1: {
+        imageMap->data()->clear();
+   } break;
+   }
+}
 
 void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
 {
     //Make sure we have the right index by pulling it off the object itself so we can call this ourselves with impunity
+
     index=ui->graphModeBox->currentIndex();
     switch (index)
     {
@@ -204,6 +263,8 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
         ui->bigGraph->xAxis->setLabel("Field (T)");
         ui->bigGraph->yAxis->setLabel("Signal from lockin (V)");
         twoDTrace = new QCPCurve(ui->bigGraph->xAxis, ui->bigGraph->yAxis);
+
+        //ui->bigGraph->plotLayout()->remove(colorScale);
         ui->bigGraph->addPlottable(twoDTrace);
         ui->bigGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
         twoDTrace->setPen(QPen(Qt::blue));
@@ -212,13 +273,52 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
         ui->bigGraph->clearPlottables();
         ui->bigGraph->xAxis->setLabel("Mirror X (V)");
         ui->bigGraph->yAxis->setLabel("Mirror Y (V)");
-        ui->bigGraph->axisRect()->setupFullAxesBox(true);
         imageMap = new QCPColorMap(ui->bigGraph->xAxis, ui->bigGraph->yAxis);
         ui->bigGraph->addPlottable(imageMap);
-        int nx = (int) (mirror.end_x-mirror.start_x)/mirror.delta_x+1;
-        int ny = (int) (mirror.end_y-mirror.start_y)/mirror.delta_y+1;
+        //ui->bigGraph->xAxis->setRange(mirror.start_x,mirror.end_x);
+        //ui->bigGraph->yAxis->setRange(mirror.start_y,mirror.end_y);
+        ui->bigGraph->axisRect()->setupFullAxesBox(true);
+
+        imageMap->setGradient(QCPColorGradient::gpHot);
+        imageMap->rescaleDataRange(true);
+        int nx = (int) floor((mirror.end_x-mirror.start_x)/mirror.delta_x+1);
+        int ny = (int) floor((mirror.end_y-mirror.start_y)/mirror.delta_y+1);
         imageMap->data()->setSize(nx,ny);
         imageMap->data()->setRange(QCPRange(mirror.start_x,mirror.end_x),QCPRange(mirror.start_y,mirror.end_y));
+
+         //Color scale stuff
+//        colorScale = new QCPColorScale(ui->bigGraph);
+//        ui->bigGraph->plotLayout()->addElement(0,1,colorScale);
+//        colorScale->setType(QCPAxis::atRight);
+//        imageMap->setColorScale(colorScale);
+//        colorScale->axis()->setLabel("Lockin volts (V)");
+//        marginGroup = new QCPMarginGroup(ui->bigGraph);
+//        ui->bigGraph->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop,marginGroup);
+//        colorScale->setMarginGroup(QCP::msBottom|QCP::msTop,marginGroup);
+
     } break;
+    }
+    //UpdateGraph(); //Why is this here again?
+}
+
+void UtilMOKE::on_saveDataButton_clicked()
+{
+
+    QString filename = QFileDialog::getSaveFileName(this,"Save file","default.dat",".dat");
+    WriteFile(filename);
+}
+
+void UtilMOKE::WriteFile(QString filename) {
+    out_file.setFileName(filename);
+    if (out_file.open(QFile::WriteOnly|QFile::Truncate))
+    {   int i;
+        QTextStream output(&out_file);
+        output << "Field" << "\t" << "Lockin" << "\t" << "Lockin_2f" <<
+                  "\t" << "DC_volts" << "\t" << "MirrorX" << "\t" << "MirrorY" << "\n";
+        for (i=0;i<data.collected;i++){
+            output << data.tesla[i] << "\t" << data.lockin_volts[i] << "\t" << data.lockin_2f_volts[i] <<
+                      "\t" << data.dc_volts[i] << "\t" << data.mirrorX[i] << "\t" << data.mirrorY[i] << "\n";
+        }
+        out_file.close();
     }
 }
