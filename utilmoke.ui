@@ -10,6 +10,70 @@
     <height>670</height>
    </rect>
   </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>220</red>
+        <green>220</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>220</red>
+        <green>220</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>220</red>
+        <green>220</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>220</red>
+        <green>220</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
+  </property>
   <property name="windowTitle">
    <string>UtilMOKE</string>
   </property>
@@ -553,7 +617,7 @@
   <widget class="QPushButton" name="saveDataButton">
    <property name="geometry">
     <rect>
-     <x>850</x>
+     <x>770</x>
      <y>400</y>
      <width>75</width>
      <height>23</height>
@@ -563,7 +627,7 @@
     <string>Save Data</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>770</x>
@@ -612,6 +676,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="test7270Button">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>400</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test 7270</string>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

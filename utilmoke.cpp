@@ -4,6 +4,7 @@
 #include "daqmagcontrol.h"
 #include "mokedata.h"
 #include "pximirroraxes.h"
+#include "lockin7270.h"
 
 
 template <typename T> int sgn(T val) {
@@ -17,6 +18,7 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     ui->setupUi(this);
 
     //Add values to combo boxes
+    {
     ui->graphModeBox->addItem("Mag sweep"); // Index 0
     ui->graphModeBox->addItem("Scan image"); // Index 1
     ui->whatToPlotBox->addItem("Lockin Volts");// Index 0
@@ -24,12 +26,22 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     ui->whatToPlotBox->addItem("DC Volts"); // Index 2
     ui->whatToPlotBox->addItem("Lockin Volts / DC");// Index 3
     ui->whatToPlotBox->addItem("Lockin 2f Volts / DC");// Index 4
+    }
+
+    //What lockin model are we using?
+    lockin_model = 7270;
 
     //Device channels and addresses
     mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
     bigMag.set_chan("Dev2/ao0");
-    lockin.set_address(27);
     keithley.set_address(26);
+    switch (lockin_model) {
+        case 7265:lockin.set_address(27); break;
+        case 7270:big_lockin.start("192.168.2.130",50000); break;
+    }
+
+
+
 
     out_filename="";
 
@@ -174,30 +186,34 @@ void UtilMOKE::on_magSweep_clicked()
 
 void UtilMOKE::TakeSingle()
 {
+    switch (lockin_model) {
+    case 7265: {
+        data.lockin_volts.append(lockin.get_x());
+        data.lockin_2f_volts.append(0.0); //Not used in this mode!
+    } break;
+    case 7270: {
+        data.lockin_volts.append(big_lockin.get_x1());
+        data.lockin_2f_volts.append(big_lockin.get_x2()); //Is used in this mode!
+    } break;
+    }
     data.tesla.append(bigMag.now);
-    data.lockin_volts.append(lockin.get_x());
-    data.lockin_2f_volts.append(0.0); //Not currently used
     data.dc_volts.append(keithley.read());
     data.mirrorX.append(mirror.now_x);
     data.mirrorY.append(mirror.now_y);
     data.collected+=1;
     UpdateGraph();
-
 }
 
 void UtilMOKE::UpdateGraph()
 {
-    //    ui->bigGraph->graph(0)->setData(data.tesla,data.volts);
-    //    ui->bigGraph->xAxis->setRange(bigMag.start,bigMag.end);
-    //    ui->bigGraph->yAxis->setRange(data.min_volts(),data.max_volts());
-    //
+
     int whatToPlot=ui->whatToPlotBox->currentIndex();
     QVector<double> plottable;
     int i;
     switch (whatToPlot)
     {
     case 0: plottable=data.lockin_volts;  break; //Normal lockin volts
-    case 1: break;//not yet implemented  // 2f Lockin volts
+    case 1: plottable=data.lockin_2f_volts; break;  // 2f Lockin volts
     case 2: plottable=data.dc_volts; break; // DC volts
     case 3: {                                   // 1f / DC
         for (i=0;i<data.collected;i++){
@@ -206,7 +222,7 @@ void UtilMOKE::UpdateGraph()
     } break;
     case 4: {                                  //2f / DC
         for (i=0;i<data.collected;i++){
-            //Not yet implemented
+             plottable.append(data.lockin_2f_volts[i]/data.dc_volts[i]);
         }
     } break;
     }
@@ -321,4 +337,9 @@ void UtilMOKE::WriteFile(QString filename) {
         }
         out_file.close();
     }
+}
+
+void UtilMOKE::on_test7270Button_clicked()
+{
+    big_lockin.test();
 }

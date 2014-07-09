@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webkit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     lockin7265.cpp \
     mokedata.cpp \
-    keithley2k.cpp
+    keithley2k.cpp \
+    lockin7270.cpp
 
 HEADERS  += \
     utilmoke.h \
@@ -31,7 +32,8 @@ HEADERS  += \
     gpib.h \
     ni488.h \
     mokedata.h \
-    keithley2k.h
+    keithley2k.h \
+    lockin7270.h
 
 
 
