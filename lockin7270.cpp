@@ -22,7 +22,6 @@ void Lockin7270::start(QString ip_string, int this_port) {
     port = this_port;
     socket = new QTcpSocket(0);
     host_address.setAddress(ip_address_string);
-
 }
 
 void Lockin7270::send_command(QString command) {
