@@ -23,5 +23,5 @@ void APTAngle::init()
     motor.SetHWSerialNum(83853589);
     motor.StartCtrl();
     motor.MoveHome(0,1);
-    motor.MoveAbsoluteRot(0,61,61,3,0);
+    //motor.MoveAbsoluteRot(0,61,61,3,0);
 }

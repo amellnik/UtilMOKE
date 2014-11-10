@@ -13,6 +13,7 @@ public:
     QVector<double> tesla;
     QVector<double> mirrorX;
     QVector<double> mirrorY;
+    QVector<double> index;
     int collected;
 
     void clear_data();

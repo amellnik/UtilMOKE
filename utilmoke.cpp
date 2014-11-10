@@ -222,6 +222,7 @@ void UtilMOKE::TakeSingle()
         data.lockin_x2_volts.append(big_lockin.get_x2());
     } break;
     }
+    data.index.append(data.collected);
     data.tesla.append(bigMag.now);
     data.dc_volts.append(keithley.read());
     data.mirrorX.append(mirror.now_x);
@@ -286,13 +287,11 @@ void UtilMOKE::UpdateGraph()
         ui->bigGraph->replot();
     } break;
     case 2: {
-        QVector<double> lineindex;
-        for (i=0;i<data.collected;i++){
-            lineindex.append(mirror.line_step*i);
-        }
-        twoDTrace->setData(lineindex,plottable);
+        twoDTrace->setData(data.index,plottable);
         ui->bigGraph->yAxis->rescale();
-        ui->bigGraph->xAxis->setRange(lineindex[0],lineindex[data.collected]);
+        if (data.collected>0){
+            ui->bigGraph->xAxis->setRange(data.index.first(),data.index.last());
+        }
         ui->bigGraph->replot();
     }
 
@@ -310,11 +309,13 @@ void UtilMOKE::ClearData(){ // Not currently used
    { // It's possible the later cases may not be initialized yet, clearing them would give a seg fault
    case 0: {
        twoDTrace->data()->clear();
-
    } break;
    case 1: {
         imageMap->data()->clear();
    } break;
+   case 2:{
+       twoDTrace->data()->clear();
+   }
    }
 }
 
