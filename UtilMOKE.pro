@@ -4,13 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkit
+QT       += core gui webkit axcontainer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = UtilMOKE
 TEMPLATE = app
 
+CONFIG += axcontainer
 
 SOURCES += main.cpp\
         utilmoke.cpp \
@@ -20,7 +21,9 @@ SOURCES += main.cpp\
     lockin7265.cpp \
     mokedata.cpp \
     keithley2k.cpp \
-    lockin7270.cpp
+    lockin7270.cpp \
+    aptangle.cpp \
+    APT/APT.cpp
 
 HEADERS  += \
     utilmoke.h \
@@ -33,7 +36,9 @@ HEADERS  += \
     ni488.h \
     mokedata.h \
     keithley2k.h \
-    lockin7270.h
+    lockin7270.h \
+    aptangle.h \
+    APT/APT.h
 
 
 

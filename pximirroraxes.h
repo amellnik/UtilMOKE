@@ -17,6 +17,13 @@ public:
     double end_y;
     double delta_x;
     double delta_y;
+
+    double line_x_start;
+    double line_x_end;
+    double line_y_start;
+    double line_y_end;
+    double line_step;
+
     int delay;
     double sampling_rate;
     int buffer_size;

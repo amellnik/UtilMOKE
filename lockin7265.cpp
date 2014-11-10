@@ -6,7 +6,6 @@
 
 Lockin7265::Lockin7265()
 {
-
 }
 
 void Lockin7265::set_address(int ady) {
@@ -16,10 +15,8 @@ void Lockin7265::set_address(int ady) {
 
 double Lockin7265::get_x()
 {
-    //Get value via gpib
     char buff[100];
     char *trash;
-    //ibwrt (handle, "X.", strlen("X."));
     ibwrt (handle, const_cast<char*>("X."), strlen("X."));
     ibrd (handle, &buff, 100);
     return strtod(buff, &trash);

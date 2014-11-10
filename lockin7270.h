@@ -24,7 +24,6 @@ private:
     QString read_response();
     void send_command(QString command);
     void socketError(QAbstractSocket::SocketError);
-
 };
 
 #endif // LOCKIN7270_H

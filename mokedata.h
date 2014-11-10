@@ -6,8 +6,9 @@ class MOKEData
 {
 public:
 
-    QVector<double> lockin_volts;
-    QVector<double> lockin_2f_volts;
+    QVector<double> lockin_x_volts; // Single channel on the 7265
+    QVector<double> lockin_x1_volts;// x1 on the 7270
+    QVector<double> lockin_x2_volts;// x2 on the 7270
     QVector<double> dc_volts;
     QVector<double> tesla;
     QVector<double> mirrorX;

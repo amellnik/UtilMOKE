@@ -4,8 +4,9 @@
 MOKEData::MOKEData()
 {
     //Go ahead and allocate a lot of space for data
-    lockin_volts.reserve(10000);
-    lockin_2f_volts.reserve(10000);
+    lockin_x_volts.reserve(10000);
+    lockin_x1_volts.reserve(10000);
+    lockin_x2_volts.reserve(10000);
     dc_volts.reserve(10000);
     tesla.reserve(10000);
     mirrorX.reserve(10000);
@@ -15,7 +16,9 @@ MOKEData::MOKEData()
 
 void MOKEData::clear_data()
 {
-    lockin_volts.clear();
+    lockin_x_volts.clear();
+    lockin_x1_volts.clear();
+    lockin_x2_volts.clear();
     dc_volts.clear();
     tesla.clear();
     mirrorX.clear();

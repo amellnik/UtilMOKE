@@ -31,7 +31,6 @@ void Lockin7270::send_command(QString command) {
     buffer.append(command);
     socket->write(buffer);
     socket->flush();
-    //socket->waitForBytesWritten(20);
 }
 
 QString Lockin7270::read_response()
@@ -57,7 +56,6 @@ void Lockin7270::test() {
 //    send_command("ID\0");
 //    QString response = read_response();
 //    int i=0;
-
 }
 
 double Lockin7270::get_x1(){

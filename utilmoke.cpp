@@ -5,6 +5,7 @@
 #include "mokedata.h"
 #include "pximirroraxes.h"
 #include "lockin7270.h"
+#include "aptangle.h"
 
 
 template <typename T> int sgn(T val) {
@@ -21,15 +22,21 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     {
     ui->graphModeBox->addItem("Mag sweep"); // Index 0
     ui->graphModeBox->addItem("Scan image"); // Index 1
-    ui->whatToPlotBox->addItem("Lockin Volts");// Index 0
-    ui->whatToPlotBox->addItem("Lockin 2f Volts");// Index 1
-    ui->whatToPlotBox->addItem("DC Volts"); // Index 2
-    ui->whatToPlotBox->addItem("Lockin Volts / DC");// Index 3
-    ui->whatToPlotBox->addItem("Lockin 2f Volts / DC");// Index 4
+    ui->graphModeBox->addItem("Line scan"); // Index 2
+
+
+    ui->whatToPlotBox->addItem("7265 X Volts");// Index 0
+    ui->whatToPlotBox->addItem("7270 X1 Volts");// Index 1
+    ui->whatToPlotBox->addItem("7270 X2 Volts");// Index 2
+    ui->whatToPlotBox->addItem("DC Volts"); // Index 3
+    ui->whatToPlotBox->addItem("X / DC");// Index 4
+    ui->whatToPlotBox->addItem("X1 / DC");// Index 5
+    ui->whatToPlotBox->addItem("X2 / DC");// Index 6
     }
 
-    //What lockin model are we using?
-    lockin_model = 7270;
+    //What lockin model are we using?  Options are 7265, 7270, both
+    int both = 7265+7270; // = 14535
+    lockin_model = both;
 
     //Device channels and addresses
     mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
@@ -37,12 +44,9 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     keithley.set_address(26);
     switch (lockin_model) {
         case 7265:lockin.set_address(27); break;
-        case 7270:big_lockin.start("192.168.2.130",50000); break;
+        case 7270:big_lockin.start("192.168.1.119",50000); break;
+        case 14535: lockin.set_address(27);big_lockin.start("192.168.1.119",50000); break;
     }
-
-
-
-
     out_filename="";
 
     bigMag.ramp(ui->magSetBox->value());
@@ -62,12 +66,23 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     connect(ui->magDeltaBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
     connect(ui->magDelayBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
 
+    connect(ui->angleStartBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->angleEndBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->angleDeltaBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+
+    connect(ui->lineXStartBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->lineXEndBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->lineYStartBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->lineYEndBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
+    connect(ui->lineStepBox, SIGNAL(editingFinished()),this,SLOT(settingWidgetChanged()));
     }
     settingWidgetChanged(); //Load default values from UI into classes
     on_interruptBox_clicked(); // probably set the global interrupt to 0
 
     ui->bigGraph->addGraph();  //Set up some default stuff for the big graph
     on_graphModeBox_currentIndexChanged(0);
+
+    angle.init();
 
 }
 
@@ -90,9 +105,18 @@ void UtilMOKE::settingWidgetChanged()
     bigMag.end=ui->magEndBox->value();
     bigMag.delta=ui->magDeltaBox->value();
     bigMag.delay=ui->magDelayBox->value();
+    angle.start=ui->angleStartBox->value();
+    angle.end=ui->angleEndBox->value();
+    angle.delta=ui->angleDeltaBox->value();
+    mirror.line_x_start=ui->lineXStartBox->value();
+    mirror.line_x_end=ui->lineXEndBox->value();
+    mirror.line_y_start=ui->lineYStartBox->value();
+    mirror.line_y_end=ui->lineYEndBox->value();
+    mirror.line_step=ui->lineStepBox->value();
 
     //Call this in case the mirror settings were changed and we need to adjust the image plot
     on_graphModeBox_currentIndexChanged(-1);
+
 }
 
 void UtilMOKE::on_mirrorGotoSetpoints_clicked()
@@ -112,23 +136,17 @@ void UtilMOKE::on_magVoltsSetBox_editingFinished()
 
 void UtilMOKE::on_takeImage_clicked()
 {
-    //ClearData(); // Clear existing data if any
     data.clear_data();
 
     double mX=mirror.start_x;
     double mY=mirror.start_y;
     mirror.prep_sweep();
 
-//    mirror.sweep_set(mX,mY);  // These three lines are a crappy bug fix that prevents the image plot from
-//    TakeSingle();             // showing up unless you switch into the normal plotting mode and then back
-//    on_graphModeBox_currentIndexChanged(1);
-
     for (mY=mirror.start_y;(fabs(mirror.end_y-mY)>=mirror.delta_y)&&(interrupt==0);mY+=mirror.delta_y*sgn(mirror.end_y-mirror.start_y))
     {
         Sleep(mirror.delay*10); //Long initial delay to reset
         for (mX=mirror.start_x;(fabs(mX-mirror.end_x)>=mirror.delta_x)&&(interrupt==0);mX+=mirror.delta_x*sgn(mirror.end_x-mirror.start_x))
         {
-
             mirror.sweep_set(mX,mY);
             Sleep(mirror.delay);
             TakeSingle();
@@ -151,7 +169,7 @@ void UtilMOKE::on_magSweep_clicked()
     if (interrupt==0)
     {
 
-        data.clear_data();
+        //data.clear_data();
         bigMag.ramp(field);
         TakeSingle();
     }
@@ -186,14 +204,22 @@ void UtilMOKE::on_magSweep_clicked()
 
 void UtilMOKE::TakeSingle()
 {
+
     switch (lockin_model) {
     case 7265: {
-        data.lockin_volts.append(lockin.get_x());
-        data.lockin_2f_volts.append(0.0); //Not used in this mode!
+        data.lockin_x_volts.append(lockin.get_x());
+        data.lockin_x1_volts.append(0.0); //Not used in this mode!
+        data.lockin_x2_volts.append(0.0); //Not used in this mode!
     } break;
     case 7270: {
-        data.lockin_volts.append(big_lockin.get_x1());
-        data.lockin_2f_volts.append(big_lockin.get_x2()); //Is used in this mode!
+        data.lockin_x_volts.append(0.0); //Not used in this mode!
+        data.lockin_x1_volts.append(big_lockin.get_x1());
+        data.lockin_x2_volts.append(big_lockin.get_x2());
+    } break;
+    case 14535: {
+        data.lockin_x_volts.append(lockin.get_x());
+        data.lockin_x1_volts.append(big_lockin.get_x1());
+        data.lockin_x2_volts.append(big_lockin.get_x2());
     } break;
     }
     data.tesla.append(bigMag.now);
@@ -212,17 +238,31 @@ void UtilMOKE::UpdateGraph()
     int i;
     switch (whatToPlot)
     {
-    case 0: plottable=data.lockin_volts;  break; //Normal lockin volts
-    case 1: plottable=data.lockin_2f_volts; break;  // 2f Lockin volts
-    case 2: plottable=data.dc_volts; break; // DC volts
-    case 3: {                                   // 1f / DC
+//    ui->whatToPlotBox->addItem("7265 X Volts");// Index 0
+//    ui->whatToPlotBox->addItem("7270 X1 Volts");// Index 1
+//    ui->whatToPlotBox->addItem("7270 X2 Volts");// Index 2
+//    ui->whatToPlotBox->addItem("DC Volts"); // Index 3
+//    ui->whatToPlotBox->addItem("X / DC");// Index 4
+//    ui->whatToPlotBox->addItem("X1 / DC");// Index 5
+//    ui->whatToPlotBox->addItem("X2 / DC");// Index 6
+
+    case 0: plottable=data.lockin_x_volts;  break; //Normal lockin volts
+    case 1: plottable=data.lockin_x1_volts; break;  // 7270 X1
+    case 2: plottable=data.lockin_x2_volts; break; // 7270 x2
+    case 3: plottable =data.dc_volts; break; //DC
+    case 4: {                                   // x / DC
         for (i=0;i<data.collected;i++){
-            plottable.append(data.lockin_volts[i]/data.dc_volts[i]);
+            plottable.append(data.lockin_x_volts[i]/data.dc_volts[i]);
         }
     } break;
-    case 4: {                                  //2f / DC
+    case 5: {                                  //x1 / DC
         for (i=0;i<data.collected;i++){
-             plottable.append(data.lockin_2f_volts[i]/data.dc_volts[i]);
+             plottable.append(data.lockin_x1_volts[i]/data.dc_volts[i]);
+        }
+    } break;
+    case 6: {                                  //x1 / DC
+        for (i=0;i<data.collected;i++){
+             plottable.append(data.lockin_x2_volts[i]/data.dc_volts[i]);
         }
     } break;
     }
@@ -244,7 +284,18 @@ void UtilMOKE::UpdateGraph()
         ui->bigGraph->rescaleAxes();
         imageMap->rescaleDataRange();
         ui->bigGraph->replot();
+    } break;
+    case 2: {
+        QVector<double> lineindex;
+        for (i=0;i<data.collected;i++){
+            lineindex.append(mirror.line_step*i);
+        }
+        twoDTrace->setData(lineindex,plottable);
+        ui->bigGraph->yAxis->rescale();
+        ui->bigGraph->xAxis->setRange(lineindex[0],lineindex[data.collected]);
+        ui->bigGraph->replot();
     }
+
     }
 }
 
@@ -277,10 +328,8 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
     case 0: {
         ui->bigGraph->clearPlottables();
         ui->bigGraph->xAxis->setLabel("Field (T)");
-        ui->bigGraph->yAxis->setLabel("Signal from lockin (V)");
+        ui->bigGraph->yAxis->setLabel("Selected voltage signal (V)");
         twoDTrace = new QCPCurve(ui->bigGraph->xAxis, ui->bigGraph->yAxis);
-
-        //ui->bigGraph->plotLayout()->remove(colorScale);
         ui->bigGraph->addPlottable(twoDTrace);
         ui->bigGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
         twoDTrace->setPen(QPen(Qt::blue));
@@ -291,30 +340,25 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
         ui->bigGraph->yAxis->setLabel("Mirror Y (V)");
         imageMap = new QCPColorMap(ui->bigGraph->xAxis, ui->bigGraph->yAxis);
         ui->bigGraph->addPlottable(imageMap);
-        //ui->bigGraph->xAxis->setRange(mirror.start_x,mirror.end_x);
-        //ui->bigGraph->yAxis->setRange(mirror.start_y,mirror.end_y);
         ui->bigGraph->axisRect()->setupFullAxesBox(true);
-
         imageMap->setGradient(QCPColorGradient::gpHot);
         imageMap->rescaleDataRange(true);
         int nx = (int) floor((mirror.end_x-mirror.start_x)/mirror.delta_x+1);
         int ny = (int) floor((mirror.end_y-mirror.start_y)/mirror.delta_y+1);
         imageMap->data()->setSize(nx,ny);
         imageMap->data()->setRange(QCPRange(mirror.start_x,mirror.end_x),QCPRange(mirror.start_y,mirror.end_y));
-
-         //Color scale stuff
-//        colorScale = new QCPColorScale(ui->bigGraph);
-//        ui->bigGraph->plotLayout()->addElement(0,1,colorScale);
-//        colorScale->setType(QCPAxis::atRight);
-//        imageMap->setColorScale(colorScale);
-//        colorScale->axis()->setLabel("Lockin volts (V)");
-//        marginGroup = new QCPMarginGroup(ui->bigGraph);
-//        ui->bigGraph->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop,marginGroup);
-//        colorScale->setMarginGroup(QCP::msBottom|QCP::msTop,marginGroup);
-
+    } break;
+    case 2: {
+        ui->bigGraph->clearPlottables();
+        ui->bigGraph->xAxis->setLabel("Position along line (V)");
+        ui->bigGraph->yAxis->setLabel("Selected voltage signal (V)");
+        twoDTrace = new QCPCurve(ui->bigGraph->xAxis, ui->bigGraph->yAxis);
+        ui->bigGraph->addPlottable(twoDTrace);
+        ui->bigGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+        twoDTrace->setPen(QPen(Qt::blue));
     } break;
     }
-    //UpdateGraph(); //Why is this here again?
+    UpdateGraph(); //Why is this here again?
 }
 
 void UtilMOKE::on_saveDataButton_clicked()
@@ -329,11 +373,12 @@ void UtilMOKE::WriteFile(QString filename) {
     if (out_file.open(QFile::WriteOnly|QFile::Truncate))
     {   int i;
         QTextStream output(&out_file);
-        output << "Field" << "\t" << "Lockin" << "\t" << "Lockin_2f" <<
+        output << "Field" << "\t" << "X" << "\t" << "X1" << "\t" << "X2"
                   "\t" << "DC_volts" << "\t" << "MirrorX" << "\t" << "MirrorY" << "\n";
         for (i=0;i<data.collected;i++){
-            output << data.tesla[i] << "\t" << data.lockin_volts[i] << "\t" << data.lockin_2f_volts[i] <<
-                      "\t" << data.dc_volts[i] << "\t" << data.mirrorX[i] << "\t" << data.mirrorY[i] << "\n";
+            output << data.tesla[i] << "\t" << data.lockin_x_volts[i] << "\t" << data.lockin_x1_volts[i] <<
+                      "\t" << data.lockin_x2_volts[i] << "\t" << data.dc_volts[i] << "\t" << data.mirrorX[i] <<
+                      "\t" << data.mirrorY[i] << "\n";
         }
         out_file.close();
     }
@@ -342,4 +387,44 @@ void UtilMOKE::WriteFile(QString filename) {
 void UtilMOKE::on_test7270Button_clicked()
 {
     big_lockin.test();
+}
+
+void UtilMOKE::on_whatToPlotBox_currentIndexChanged(int index)
+{
+    UpdateGraph();
+}
+
+void UtilMOKE::on_angleGotoButton_clicked()
+{
+    angle.set(ui->angleSetBox->value());
+}
+
+void UtilMOKE::on_pushButton_clicked()
+{
+    QString start = ui->pathAndPrefixEdit->text();
+    QString filename;
+    QTextStream(&filename) << start << "_" << angle.now << "deg_" << ui->ref_rSpinBox->value() << "Ohm_" << bigMag.now <<  "T.dat";
+    WriteFile(filename);
+}
+
+void UtilMOKE::on_takeLineScanButton_clicked()
+{
+    data.clear_data();
+
+    double mX=mirror.line_x_start;
+    double mY=mirror.line_y_start;
+    double dX = (mirror.line_x_end - mirror.line_x_start); //Full distance not step size in that direction
+    double dY = (mirror.line_y_end - mirror.line_y_start);
+    double angle = qAtan2(dY,dX);
+    mirror.prep_sweep();
+    while ((sqrt(pow(mX-mirror.line_x_end,2)+pow(mY-mirror.line_y_end,2))>mirror.line_step)&&(interrupt==0))
+    {
+            mirror.sweep_set(mX,mY);
+            Sleep(mirror.delay);
+            TakeSingle();
+            QCoreApplication::processEvents();
+            mX += qCos(angle)*mirror.line_step;
+            mY += qSin(angle)*mirror.line_step;
+  }
+    mirror.set_dc(0.0,0.0);
 }

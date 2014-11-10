@@ -10,6 +10,7 @@
 #include "keithley2k.h"
 #include <QWidget>
 #include "lockin7270.h"
+#include "aptangle.h"
 
 
 namespace Ui {
@@ -46,6 +47,14 @@ private slots:
 
     void on_test7270Button_clicked();
 
+    void on_whatToPlotBox_currentIndexChanged(int index);
+
+    void on_angleGotoButton_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_takeLineScanButton_clicked();
+
 private:
     Ui::UtilMOKE *ui;
     PxiMirrorAxes mirror;
@@ -55,6 +64,8 @@ private:
     Keithley2k keithley;
     int lockin_model;
     MOKEData data;
+    APTAngle angle;
+    //Experiment experiment;
 
     QFile out_file;
     QString out_filename;
@@ -65,5 +76,13 @@ private:
     QCPMarginGroup *marginGroup;
 
 };
+
+//class Experiment
+//{
+//public:
+//    double ref_r;
+    //Anything else that goes here?
+//};
+
 
 #endif // UTILMOKE_H
