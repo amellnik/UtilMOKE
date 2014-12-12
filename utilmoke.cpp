@@ -222,7 +222,7 @@ void UtilMOKE::TakeSingle()
         data.lockin_x2_volts.append(big_lockin.get_x2());
     } break;
     }
-    data.index.append(data.collected);
+    data.index.append(data.collected*mirror.line_step);
     data.tesla.append(bigMag.now);
     data.dc_volts.append(keithley.read());
     data.mirrorX.append(mirror.now_x);
@@ -400,7 +400,7 @@ void UtilMOKE::on_angleGotoButton_clicked()
     angle.set(ui->angleSetBox->value());
 }
 
-void UtilMOKE::on_pushButton_clicked()
+void UtilMOKE::on_autoSaveButton_clicked()
 {
     QString start = ui->pathAndPrefixEdit->text();
     QString filename;
@@ -428,4 +428,52 @@ void UtilMOKE::on_takeLineScanButton_clicked()
             mY += qSin(angle)*mirror.line_step;
   }
     mirror.set_dc(0.0,0.0);
+}
+
+void UtilMOKE::on_stepAngleSweepButton_clicked()
+{
+    double this_angle=angle.start;
+    int index;
+    bool temp = (fabs(angle.end-this_angle)>angle.delta);
+    while ((fabs(angle.end-this_angle)<angle.delta)&&(interrupt==0)) {
+        angle.set(this_angle);
+        index=ui->graphModeBox->currentIndex();
+        switch (index)
+        {
+        case 0: {
+            on_magSweep_clicked();
+        } break;
+        case 1: {
+            on_takeImage_clicked();
+        } break;
+        case 2: {
+            on_takeLineScanButton_clicked();
+        } break;
+        }
+        on_autoSaveButton_clicked();
+        this_angle+=angle.delta*sgn(angle.end-angle.start);
+    }
+
+}
+
+void UtilMOKE::on_mirrorTestButton_clicked()
+{
+    int step=0;
+    while(interrupt==0){
+        if ((step%2)==0){
+            mirror.set_dc(0,0);
+        } else {
+            int index=(step%8);
+            switch(index){
+            case 1: mirror.set_dc(10,0); break;
+            case 3: mirror.set_dc(0,10); break;
+            case 5: mirror.set_dc(-10,0); break;
+            case 7: mirror.set_dc(0,-10); break;
+            }
+        }
+        Sleep(500);
+        step++;
+        QCoreApplication::processEvents();
+    }
+    mirror.set_dc(0,0);
 }

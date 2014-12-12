@@ -51,9 +51,13 @@ private slots:
 
     void on_angleGotoButton_clicked();
 
-    void on_pushButton_clicked();
+    void on_autoSaveButton_clicked();
 
     void on_takeLineScanButton_clicked();
+
+    void on_stepAngleSweepButton_clicked();
+
+    void on_mirrorTestButton_clicked();
 
 private:
     Ui::UtilMOKE *ui;
