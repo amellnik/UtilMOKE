@@ -896,6 +896,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QCheckBox" name="swapScansBox">
+      <property name="text">
+       <string>Field swap scans?</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_20">
       <item>
        <widget class="QLabel" name="label_22">

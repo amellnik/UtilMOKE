@@ -410,8 +410,8 @@ void UtilMOKE::on_autoSaveButton_clicked()
 
 void UtilMOKE::on_takeLineScanButton_clicked()
 {
+    // Line scans append both field directions to the same file if the swapScan box is checked
     data.clear_data();
-
     double mX=mirror.line_x_start;
     double mY=mirror.line_y_start;
     double dX = (mirror.line_x_end - mirror.line_x_start); //Full distance not step size in that direction
@@ -426,8 +426,29 @@ void UtilMOKE::on_takeLineScanButton_clicked()
             QCoreApplication::processEvents();
             mX += qCos(angle)*mirror.line_step;
             mY += qSin(angle)*mirror.line_step;
-  }
+    }
     mirror.set_dc(0.0,0.0);
+    bool swapScan = ui->swapScansBox->isChecked();
+    if (swapScan&&(interrupt==0)) {
+        //Swap magnetic field here
+        double newMag = -ui->magSetBox->value();
+        ui->magSetBox->setValue(newMag);
+        bigMag.ramp(ui->magSetBox->value());
+
+        mX=mirror.line_x_start;
+        mY=mirror.line_y_start;
+        mirror.prep_sweep();
+        while ((sqrt(pow(mX-mirror.line_x_end,2)+pow(mY-mirror.line_y_end,2))>mirror.line_step)&&(interrupt==0))
+        {
+                mirror.sweep_set(mX,mY);
+                Sleep(mirror.delay);
+                TakeSingle();
+                QCoreApplication::processEvents();
+                mX += qCos(angle)*mirror.line_step;
+                mY += qSin(angle)*mirror.line_step;
+        }
+        mirror.set_dc(0.0,0.0);
+    }
 }
 
 void UtilMOKE::on_stepAngleSweepButton_clicked()
