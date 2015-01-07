@@ -227,6 +227,7 @@ void UtilMOKE::TakeSingle()
     data.dc_volts.append(keithley.read());
     data.mirrorX.append(mirror.now_x);
     data.mirrorY.append(mirror.now_y);
+    data.mirrorLine.append(sqrt(pow(mirror.now_x-mirror.line_x_start,2)+pow(mirror.now_y-mirror.line_y_start,2)));
     data.collected+=1;
     UpdateGraph();
 }
@@ -286,11 +287,11 @@ void UtilMOKE::UpdateGraph()
         imageMap->rescaleDataRange();
         ui->bigGraph->replot();
     } break;
-    case 2: {
-        twoDTrace->setData(data.index,plottable);
+    case 2: { //Line scan mode
+        twoDTrace->setData(data.mirrorLine,plottable);
         ui->bigGraph->yAxis->rescale();
         if (data.collected>0){
-            ui->bigGraph->xAxis->setRange(data.index.first(),data.index.last());
+            ui->bigGraph->xAxis->setRange(0,sqrt(pow(mirror.line_x_start-mirror.line_x_end,2)+pow(mirror.line_y_start-mirror.line_y_end,2)));
         }
         ui->bigGraph->replot();
     }
@@ -326,7 +327,7 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
     index=ui->graphModeBox->currentIndex();
     switch (index)
     {
-    case 0: {
+    case 0: { // Mag sweep mode
         ui->bigGraph->clearPlottables();
         ui->bigGraph->xAxis->setLabel("Field (T)");
         ui->bigGraph->yAxis->setLabel("Selected voltage signal (V)");
@@ -335,7 +336,7 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
         ui->bigGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
         twoDTrace->setPen(QPen(Qt::blue));
     } break;
-    case 1: {
+    case 1: { // Image scan mode
         ui->bigGraph->clearPlottables();
         ui->bigGraph->xAxis->setLabel("Mirror X (V)");
         ui->bigGraph->yAxis->setLabel("Mirror Y (V)");
@@ -349,7 +350,7 @@ void UtilMOKE::on_graphModeBox_currentIndexChanged(int index)
         imageMap->data()->setSize(nx,ny);
         imageMap->data()->setRange(QCPRange(mirror.start_x,mirror.end_x),QCPRange(mirror.start_y,mirror.end_y));
     } break;
-    case 2: {
+    case 2: { // Line scan mode
         ui->bigGraph->clearPlottables();
         ui->bigGraph->xAxis->setLabel("Position along line (V)");
         ui->bigGraph->yAxis->setLabel("Selected voltage signal (V)");
@@ -375,11 +376,11 @@ void UtilMOKE::WriteFile(QString filename) {
     {   int i;
         QTextStream output(&out_file);
         output << "Field" << "\t" << "X" << "\t" << "X1" << "\t" << "X2"
-                  "\t" << "DC_volts" << "\t" << "MirrorX" << "\t" << "MirrorY" << "\n";
+                  "\t" << "DC_volts" << "\t" << "MirrorX" << "\t" << "MirrorY" << "\t" << "MirrorLine" << "\n";
         for (i=0;i<data.collected;i++){
             output << data.tesla[i] << "\t" << data.lockin_x_volts[i] << "\t" << data.lockin_x1_volts[i] <<
                       "\t" << data.lockin_x2_volts[i] << "\t" << data.dc_volts[i] << "\t" << data.mirrorX[i] <<
-                      "\t" << data.mirrorY[i] << "\n";
+                      "\t" << data.mirrorY[i] << "\t" << data.mirrorLine[i] << "\n";
         }
         out_file.close();
     }

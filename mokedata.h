@@ -13,6 +13,7 @@ public:
     QVector<double> tesla;
     QVector<double> mirrorX;
     QVector<double> mirrorY;
+    QVector<double> mirrorLine;
     QVector<double> index;
     int collected;
 

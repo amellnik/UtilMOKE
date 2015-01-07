@@ -11,6 +11,7 @@ MOKEData::MOKEData()
     tesla.reserve(10000);
     mirrorX.reserve(10000);
     mirrorY.reserve(10000);
+    mirrorLine.reserve(10000);
     index.reserve(10000);
     collected = 0;
 }
@@ -24,6 +25,7 @@ void MOKEData::clear_data()
     tesla.clear();
     mirrorX.clear();
     mirrorY.clear();
+    mirrorLine.clear();
     index.clear();
     collected=0;
 }
