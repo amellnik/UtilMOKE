@@ -34,9 +34,12 @@ void DaqMagControl::ramp(double this_set)
     while (fabs(set-now)>delta)
     {
         now+=delta*sgn(set-now);
+
+        // Magnetic field calibration goes here
         thisvolts=0.026142-35.013*now+1.9131*pow(now,2)+4.6271*pow(now,3)-18.01*pow(now,4);
+
         set_volts(thisvolts);
-        Sleep(delay);
+        Sleep(10); // When we are changing the field by large amounts can sweep faster
     }
     Sleep(delay);
     now=set;

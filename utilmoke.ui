@@ -128,7 +128,7 @@
          <number>1000</number>
         </property>
         <property name="value">
-         <number>10</number>
+         <number>100</number>
         </property>
        </widget>
       </item>
@@ -294,7 +294,7 @@
          <double>0.010000000000000</double>
         </property>
         <property name="value">
-         <double>0.050000000000000</double>
+         <double>0.500000000000000</double>
         </property>
        </widget>
       </item>
@@ -317,7 +317,7 @@
          <double>0.010000000000000</double>
         </property>
         <property name="value">
-         <double>0.050000000000000</double>
+         <double>0.500000000000000</double>
         </property>
        </widget>
       </item>
@@ -356,7 +356,7 @@
       <item>
        <widget class="QDoubleSpinBox" name="magSetBox">
         <property name="decimals">
-         <number>3</number>
+         <number>4</number>
         </property>
         <property name="minimum">
          <double>-0.290000000000000</double>
@@ -399,7 +399,7 @@
          <double>0.010000000000000</double>
         </property>
         <property name="value">
-         <double>-0.290000000000000</double>
+         <double>-0.050000000000000</double>
         </property>
        </widget>
       </item>
@@ -429,7 +429,7 @@
          <double>0.020000000000000</double>
         </property>
         <property name="value">
-         <double>0.290000000000000</double>
+         <double>0.050000000000000</double>
         </property>
        </widget>
       </item>
@@ -1015,8 +1015,11 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="lineStepBox">
+        <property name="decimals">
+         <number>3</number>
+        </property>
         <property name="value">
-         <double>0.020000000000000</double>
+         <double>0.005000000000000</double>
         </property>
        </widget>
       </item>
@@ -1100,6 +1103,19 @@
    </property>
    <property name="text">
     <string>Mirror test mode</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_9">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>300</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>
