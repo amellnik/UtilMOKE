@@ -456,8 +456,7 @@ void UtilMOKE::on_stepAngleSweepButton_clicked()
 {
     double this_angle=angle.start;
     int index;
-    bool temp = (fabs(angle.end-this_angle)>angle.delta);
-    while ((fabs(angle.end-this_angle)<angle.delta)&&(interrupt==0)) {
+    while ((fabs(angle.end-this_angle)>angle.delta)&&(interrupt==0)) {
         angle.set(this_angle);
         index=ui->graphModeBox->currentIndex();
         switch (index)
