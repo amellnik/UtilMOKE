@@ -2,6 +2,7 @@
 #include "ui_utilmoke.h"
 #include "lockin7265.h"
 #include "daqmagcontrol.h"
+#include "daqhallprobe.h"
 #include "mokedata.h"
 #include "pximirroraxes.h"
 #include "lockin7270.h"
@@ -41,6 +42,7 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     //Device channels and addresses
     mirror.set_chans("PXI1Slot2/ao0","PXI1Slot2/ao1" );
     bigMag.set_chan("Dev2/ao0");
+    bigMagProbe.setup("Dev2/ao1", "Dev2/ai0");
     keithley.set_address(26);
     switch (lockin_model) {
         case 7265:lockin.set_address(27); break;
@@ -50,6 +52,9 @@ UtilMOKE::UtilMOKE(QWidget *parent) :
     out_filename="";
 
     bigMag.ramp(ui->magSetBox->value());
+
+    //Turn on bias to Hall Probe
+    bigMagProbe.bias();
 
     //Connect a bunch of signals to slots
     {
@@ -132,6 +137,8 @@ void UtilMOKE::on_magGotoSetpoint_clicked()
 void UtilMOKE::on_magVoltsSetBox_editingFinished()
 {
     bigMag.set_volts(ui->magVoltsSetBox->value());
+    double hallV = bigMagProbe.readVolts();
+    ui->hallProbeVBox->setValue(hallV);
 }
 
 void UtilMOKE::on_takeImage_clicked()

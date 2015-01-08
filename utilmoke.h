@@ -3,6 +3,7 @@
 
 //#include "daqmirroraxis.h"
 #include "daqmagcontrol.h"
+#include "daqhallprobe.h"
 #include "pximirroraxes.h"
 #include "lockin7265.h"
 #include "mokedata.h"
@@ -63,6 +64,7 @@ private:
     Ui::UtilMOKE *ui;
     PxiMirrorAxes mirror;
     DaqMagControl bigMag;
+    DaqHallProbe bigMagProbe;
     Lockin7265 lockin;
     Lockin7270 big_lockin;
     Keithley2k keithley;

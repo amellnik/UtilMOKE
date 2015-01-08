@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1040</width>
-    <height>611</height>
+    <width>1026</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="palette">
@@ -80,7 +80,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>810</x>
      <y>10</y>
      <width>205</width>
      <height>201</height>
@@ -331,7 +331,7 @@
      <x>590</x>
      <y>10</y>
      <width>201</width>
-     <height>215</height>
+     <height>243</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -590,6 +590,30 @@
       </item>
      </layout>
     </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_24">
+      <item>
+       <widget class="QLabel" name="label_27">
+        <property name="text">
+         <string>Hall Probe (V)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="hallProbeVBox">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QCustomPlot" name="bigGraph" native="true">
@@ -636,8 +660,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>250</y>
+     <x>810</x>
+     <y>490</y>
      <width>201</width>
      <height>52</height>
     </rect>
@@ -726,7 +750,7 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>320</y>
+     <y>340</y>
      <width>201</width>
      <height>159</height>
     </rect>
@@ -837,7 +861,7 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>510</y>
+     <y>530</y>
      <width>201</width>
      <height>22</height>
     </rect>
@@ -865,7 +889,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>810</x>
      <y>240</y>
      <width>201</width>
      <height>181</height>
@@ -1030,7 +1054,7 @@
   <widget class="Line" name="line_4">
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>790</x>
      <y>10</y>
      <width>20</width>
      <height>521</height>
@@ -1044,7 +1068,7 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>230</y>
+     <y>320</y>
      <width>201</width>
      <height>16</height>
     </rect>
@@ -1056,7 +1080,7 @@
   <widget class="Line" name="line_6">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>810</x>
      <y>220</y>
      <width>201</width>
      <height>16</height>
@@ -1070,7 +1094,7 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>490</y>
+     <y>510</y>
      <width>201</width>
      <height>16</height>
     </rect>
@@ -1082,7 +1106,7 @@
   <widget class="Line" name="line_8">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>810</x>
      <y>430</y>
      <width>201</width>
      <height>16</height>
@@ -1095,7 +1119,7 @@
   <widget class="QPushButton" name="mirrorTestButton">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>810</x>
      <y>450</y>
      <width>201</width>
      <height>23</height>
@@ -1109,7 +1133,33 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>300</y>
+     <y>560</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_10">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>470</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_11">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>270</y>
      <width>201</width>
      <height>16</height>
     </rect>

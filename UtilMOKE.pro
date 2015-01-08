@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     keithley2k.cpp \
     lockin7270.cpp \
     aptangle.cpp \
-    APT/APT.cpp
+    APT/APT.cpp \
+    daqhallprobe.cpp
 
 HEADERS  += \
     utilmoke.h \
@@ -38,7 +39,8 @@ HEADERS  += \
     keithley2k.h \
     lockin7270.h \
     aptangle.h \
-    APT/APT.h
+    APT/APT.h \
+    daqhallprobe.h
 
 
 
