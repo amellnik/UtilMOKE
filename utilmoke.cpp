@@ -137,8 +137,11 @@ void UtilMOKE::on_magGotoSetpoint_clicked()
 void UtilMOKE::on_magVoltsSetBox_editingFinished()
 {
     bigMag.set_volts(ui->magVoltsSetBox->value());
-    double hallV = bigMagProbe.readVolts();
+    double hallV; double hallT;
+    Sleep(500); // Wait half a sec for things to stabilize before measuring
+    bigMagProbe.read(hallV, hallT);
     ui->hallProbeVBox->setValue(hallV);
+    ui->hallProbeTBox->setValue(hallT);
 }
 
 void UtilMOKE::on_takeImage_clicked()

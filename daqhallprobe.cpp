@@ -40,16 +40,16 @@ void DaqHallProbe::bias()
     }
 }
 
-double DaqHallProbe::readVolts()
+void DaqHallProbe::read(double &volts, double &tesla)
 {   // Currently hard coded to read at 1kHz
-     double volts=0.0;
+     volts=0.0;
      int num_samps = 50;
      double results[50];
      //results=malloc(num_samps*sizeof(double));
      int temp;
      temp = DAQmxCreateTask("",&readTaskHandle);
      //int32 DAQmxCreateAIVoltageChan (TaskHandle taskHandle, const char physicalChannel[], const char nameToAssignToChannel[], int32 terminalConfig, float64 minVal, float64 maxVal, int32 units, const char customScaleName[]);
-     temp = DAQmxCreateAIVoltageChan (readTaskHandle, read_chan_char, "", DAQmx_Val_Diff, -5, 5, DAQmx_Val_Volts , NULL);
+     temp = DAQmxCreateAIVoltageChan (readTaskHandle, read_chan_char, "", DAQmx_Val_Diff, -1, 1, DAQmx_Val_Volts , NULL);
      //DAQmxCfgSampClkTiming(taskHandle,"",sampleFreq,DAQmx_Val_Rising,DAQmx_Val_FiniteSamps,samplesPerChan);
      temp = DAQmxCfgSampClkTiming(readTaskHandle, "", 1000,DAQmx_Val_Rising,DAQmx_Val_FiniteSamps,num_samps);
      temp = DAQmxStartTask(readTaskHandle);
@@ -65,5 +65,7 @@ double DaqHallProbe::readVolts()
          DAQmxStopTask(readTaskHandle);
          DAQmxClearTask(readTaskHandle);
      }
-     return volts;
+     tesla = -.1826+1.2929*volts;
 }
+
+

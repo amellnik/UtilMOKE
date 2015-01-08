@@ -19,7 +19,7 @@ public:
     DaqHallProbe();
     void setup(std::string outChan, std::string readChan);
     void bias();
-    double readVolts();
+    void read(double &volts, double &tesla);
 
 };
 
