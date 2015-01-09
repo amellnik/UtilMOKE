@@ -422,6 +422,11 @@ void UtilMOKE::on_autoSaveButton_clicked()
 void UtilMOKE::on_takeLineScanButton_clicked()
 {
     // Line scans append both field directions to the same file if the swapScan box is checked
+    double thisMag = ui->magSetBox->value();
+    bigMag.ramp(-.05);
+    sleep(500);
+    bigMag.ramp(thisMag);
+    sleep(500);
     data.clear_data();
     double mX=mirror.line_x_start;
     double mY=mirror.line_y_start;
@@ -442,9 +447,12 @@ void UtilMOKE::on_takeLineScanButton_clicked()
     bool swapScan = ui->swapScansBox->isChecked();
     if (swapScan&&(interrupt==0)) {
         //Swap magnetic field here
-        double newMag = -ui->magSetBox->value();
-        ui->magSetBox->setValue(newMag);
-        bigMag.ramp(ui->magSetBox->value());
+        thisMag = -ui->magSetBox->value();
+        bigMag.ramp(-.05);
+        sleep(500);
+        bigMag.ramp(thisMag);
+        ui->magSetBox->setValue(thisMag);
+        sleep(500);
 
         mX=mirror.line_x_start;
         mY=mirror.line_y_start;
