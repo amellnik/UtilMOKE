@@ -467,6 +467,14 @@ void UtilMOKE::on_takeLineScanButton_clicked()
                 mY += qSin(angle)*mirror.line_step;
         }
         mirror.set_dc(0.0,0.0);
+
+        //Switch back to original field sign at the end so each angle scan is the same
+        thisMag = -ui->magSetBox->value();
+        bigMag.ramp(-.05);
+        Sleep(500);
+        bigMag.ramp(thisMag);
+        ui->magSetBox->setValue(thisMag);
+        Sleep(500);
     }
 }
 
