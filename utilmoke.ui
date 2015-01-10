@@ -799,7 +799,11 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_15">
       <item>
-       <widget class="QDoubleSpinBox" name="angleSetBox"/>
+       <widget class="QDoubleSpinBox" name="angleSetBox">
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="angleGotoButton">
