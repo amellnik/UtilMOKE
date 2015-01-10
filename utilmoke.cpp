@@ -472,10 +472,11 @@ void UtilMOKE::on_takeLineScanButton_clicked()
 
 void UtilMOKE::on_stepAngleSweepButton_clicked()
 {
-    double this_angle=angle.start;
+    angle.now=angle.start;
     int index;
-    while ((fabs(angle.end-this_angle)>angle.delta)&&(interrupt==0)) {
-        angle.set(this_angle);
+    while ((fabs(angle.end-angle.now)>angle.delta)&&(interrupt==0)) {
+        angle.set(angle.now);
+        ui->angleSetBox->setValue(angle.now);
         index=ui->graphModeBox->currentIndex();
         switch (index)
         {
@@ -490,7 +491,8 @@ void UtilMOKE::on_stepAngleSweepButton_clicked()
         } break;
         }
         on_autoSaveButton_clicked();
-        this_angle+=angle.delta*sgn(angle.end-angle.start);
+        angle.now+=angle.delta*sgn(angle.end-angle.start);
+        ui->angleSetBox->setValue(angle.now);
     }
 
 }
