@@ -11,6 +11,7 @@ APTAngle::APTAngle()
 
 void APTAngle::set(double angle)
 {
+    now = angle;
     angle += 61.0; // offset for the half wave plate
     if (angle<360) {
         angle-=360;
