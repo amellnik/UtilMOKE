@@ -331,7 +331,7 @@
      <x>590</x>
      <y>10</y>
      <width>201</width>
-     <height>271</height>
+     <height>294</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -382,6 +382,13 @@
      <widget class="QPushButton" name="magSweep">
       <property name="text">
        <string>Sweep Magnet</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="fancyMagSweepBox">
+      <property name="text">
+       <string>Fancy sweep?</string>
       </property>
      </widget>
     </item>

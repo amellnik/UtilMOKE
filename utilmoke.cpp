@@ -190,6 +190,7 @@ void UtilMOKE::on_magSweep_clicked()
         TakeSingle();
         QCoreApplication::processEvents();
     }
+
     if (interrupt==0)
     {
         field=bigMag.end;
@@ -197,17 +198,19 @@ void UtilMOKE::on_magSweep_clicked()
         TakeSingle();
 
     }
-    while ((fabs(field-bigMag.start)>bigMag.delta)&&(interrupt==0))
-    {
-        field+=bigMag.delta*sgn(bigMag.start-field);
-        bigMag.ramp(field);
-        TakeSingle();
-        QCoreApplication::processEvents();
-    }
-    if (interrupt==0){
-        field=bigMag.start;
-        bigMag.ramp(field);
-        TakeSingle();
+    if (ui->fancyMagSweepBox->isChecked()) {
+        while ((fabs(field-bigMag.start)>bigMag.delta)&&(interrupt==0))
+        {
+            field+=bigMag.delta*sgn(bigMag.start-field);
+            bigMag.ramp(field);
+            TakeSingle();
+            QCoreApplication::processEvents();
+        }
+        if (interrupt==0){
+            field=bigMag.start;
+            bigMag.ramp(field);
+            TakeSingle();
+        }
     }
     bigMag.ramp(0.0);
 }
